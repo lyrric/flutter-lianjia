@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'selling_house.g.dart';
+part 'package:lianjia/model/generator/selling_house.g.dart';
 
 @JsonSerializable()
 class SellingWeekStat{

@@ -1,103 +1,111 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lianjia/service/selling_house_service.dart';
+import 'package:lianjia/service/sold_house_service.dart';
+import 'package:lianjia/service/version_service.dart';
+import 'package:lianjia/views/week_stat_view.dart';
+
+import 'model/selling_house.dart';
+import 'model/sold_house.dart';
 
 void main(){
   // 强制横屏
-  SystemChrome.setPreferredOrientations([
+/*  SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight
-  ]);
+  ]);*/
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '成都链家可视化',
       theme: ThemeData(
-
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: '成都链家可视化'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  MyHomePage({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState.withSampleData();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  final List<charts.Series> seriesList;
-  final bool animate;
+  _MyHomePageState(){
+    init();
+  }
 
-  _MyHomePageState(this.seriesList, {this.animate});
+  ///挂牌中房源周
+  List<SellingWeekStat> sellingWeekStatData = new List();
+  ///已售房源周
+  List<SoldWeekStat> soldWeekStatData =  new List();
 
-  factory _MyHomePageState.withSampleData() {
-    return new _MyHomePageState(
-      _createSampleData(),
+  List<SellingMonthStat> sellingMonthStatData = new List();
+  List<SoldMonthStat> soldMonthStatData = new List();
 
-      animate: false,
-    );
+  var versionService = VersionService();
+  var soldHouseService = SoldHouseService();
+  var sellingHouseService = SellingHouseService();
+
+  String updateDate = '- -';
+
+
+
+  void init(){
+    versionService.getUpdateTime().then((data)=>{
+      super.setState((){
+          updateDate = data;
+      })
+    });
+    sellingHouseService.getSellingWeekStat().then((data)=>{
+      super.setState((){
+        sellingWeekStatData = data;
+      })
+    });
+//    sellingHouseService.getSellingMonthStat().then((data)=>{
+//      super.setState((){
+//        sellingMonthStatData = data;
+//      })
+//    });
+    soldHouseService.getSoldWeekStat().then((data)=>{
+      super.setState((){
+        soldWeekStatData = data;
+      })
+    });
+//    soldHouseService.getSoldMonthStat().then((data)=>{
+//      super.setState((){
+//        soldMonthStatData = data;
+//      })
+//    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: new charts.TimeSeriesChart(seriesList,
-          animate: animate,
-          domainAxis: new charts.DateTimeAxisSpec(
-              tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
-                  day: new charts.TimeFormatterSpec(
-                      format: 'MM-dd', transitionFormat: 'MM-dd')))),
-    );
-
-  }
-
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<MyRow, DateTime>> _createSampleData() {
-    final data = [
-      new MyRow(new DateTime(2017, 9, 25), 6),
-      new MyRow(new DateTime(2017, 9, 26), 8),
-      new MyRow(new DateTime(2017, 9, 27), 6),
-      new MyRow(new DateTime(2017, 9, 28), 9),
-      new MyRow(new DateTime(2017, 9, 29), 11),
-      new MyRow(new DateTime(2017, 9, 30), 15),
-      new MyRow(new DateTime(2017, 10, 01), 25),
-      new MyRow(new DateTime(2017, 10, 02), 33),
-      new MyRow(new DateTime(2017, 10, 03), 27),
-      new MyRow(new DateTime(2017, 10, 04), 31),
-      new MyRow(new DateTime(2017, 10, 05), 23),
-    ];
-
-    return [
-      new charts.Series<MyRow, DateTime>(
-        id: 'Cost',
-        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        domainFn: (MyRow row, _) => row.timeStamp,
-        measureFn: (MyRow row, _) => row.cost,
-        data: data,
+      appBar:  AppBar(
+        title: Text('成都链家可视化：数据更新时间 ' + updateDate),
+      ),
+      body: new Column(
+        children: <Widget>[
+          new WeekStatView(sellingWeekStatData, soldWeekStatData, 'amount'), //房源数量变化
+          //new WeekStatView(sellingWeekStatData, soldWeekStatData, 'avg_price_per'), //房源单位平均价格变化
+          //new WeekStatView(sellingWeekStatData, soldWeekStatData, 'increased_amount'), //房源新增数据变化
+        ],
       )
-    ];
+    );
   }
 
+
 }
 
-
-/// Sample time series data type.
-class MyRow {
-  final DateTime timeStamp;
-  final int cost;
-  MyRow(this.timeStamp, this.cost);
-}

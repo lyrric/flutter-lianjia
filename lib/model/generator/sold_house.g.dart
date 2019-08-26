@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'sold_house.dart';
+part of '../sold_house.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

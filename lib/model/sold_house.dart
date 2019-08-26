@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'sold_house.g.dart';
+part 'generator/sold_house.g.dart';
 
 @JsonSerializable()
 class SoldWeekStat{
@@ -22,6 +22,9 @@ class SoldWeekStat{
   factory SoldWeekStat.fromJson(Map<String, dynamic> json)=>_$SoldWeekStatFromJson(json);
   Map<String, dynamic> toJson()=>_$SoldWeekStatToJson(this);
 
+  dynamic getValue(String field){
+    return amount;
+  }
 }
 
 @JsonSerializable()
