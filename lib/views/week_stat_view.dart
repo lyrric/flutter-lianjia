@@ -36,7 +36,7 @@ class _WeekStatViewState extends State<WeekStatView> {
         id:  'sellingWeekStat_' + field,
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         domainFn: (SellingWeekStat row, _) => row.statDate,
-        measureFn: (SellingWeekStat row, _) => row.toJson()[field],
+        measureFn: (SellingWeekStat row, _) => row.amount,
         data: sellingWeekStat,
       ),
 //      new charts.Series<SoldWeekStat, DateTime>(

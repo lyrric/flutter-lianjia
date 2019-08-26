@@ -78,11 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
 //        sellingMonthStatData = data;
 //      })
 //    });
-    soldHouseService.getSoldWeekStat().then((data)=>{
-      super.setState((){
-        soldWeekStatData = data;
-      })
-    });
+//    soldHouseService.getSoldWeekStat().then((data)=>{
+//      super.setState((){
+//        soldWeekStatData = data;
+//      })
+//    });
 //    soldHouseService.getSoldMonthStat().then((data)=>{
 //      super.setState((){
 //        soldMonthStatData = data;
