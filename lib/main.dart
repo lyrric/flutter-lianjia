@@ -9,6 +9,7 @@ import 'package:lianjia/views/week_stat_view.dart';
 
 import 'model/selling_house.dart';
 import 'model/sold_house.dart';
+import 'model/stat_data.dart';
 
 void main(){
   // 强制横屏
@@ -56,6 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
   List<SellingMonthStat> sellingMonthStatData = new List();
   List<SoldMonthStat> soldMonthStatData = new List();
 
+  ///统计数据
+  StatData statData = new StatData();
+
   var versionService = VersionService();
   var soldHouseService = SoldHouseService();
   var sellingHouseService = SellingHouseService();
@@ -73,21 +77,33 @@ class _MyHomePageState extends State<MyHomePage> {
     sellingHouseService.getSellingWeekStat().then((data)=>{
       super.setState((){
         sellingWeekStatData = data;
+        statData.sellingAmount = data[11].amount;
+        statData.sellingWeekPricePer = data[11].avgPricePer;
+        statData.sellingWeekIncrease = data[11].increasedAmount;
       })
     });
     sellingHouseService.getSellingMonthStat().then((data)=>{
       super.setState((){
         sellingMonthStatData = data;
+        statData.sellingMonthIncrease = data[11].amount;
+        statData.sellingMonthPricePer = data[11].avgPricePer;
+        statData.sellingMonthIncrease = data[11].increasedAmount;
       })
     });
     soldHouseService.getSoldWeekStat().then((data)=>{
       super.setState((){
         soldWeekStatData = data;
+        statData.soldAmount = data[11].amount;
+        statData.soldWeekPricePer = data[11].avgPricePer;
+        statData.soldWeekIncrease = data[11].increasedAmount;
       })
     });
     soldHouseService.getSoldMonthStat().then((data)=>{
       super.setState((){
         soldMonthStatData = data;
+        statData.soldMonthIncrease = data[11].amount;
+        statData.soldMonthPricePer = data[11].avgPricePer;
+        statData.soldMonthIncrease = data[11].increasedAmount;
       })
     });
   }
@@ -137,27 +153,45 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             new Container(
               padding: const EdgeInsets.only(top: 20),
-              child: new Text('房源数量趋势'),
+              child: new Text('房源数量走势'),
             ),
             isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'amount'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'amount'), //房源数量变化
             new Container(
+              padding: const EdgeInsets.only(top: 10),
+              child:  new Text('待售房源：'+ statData.sellingAmount.toString() + '套      已售房源：'+ statData.soldAmount.toString() + '套')
+            ),
+            new Container(
               padding: const EdgeInsets.only(top: 20),
-              child:  new Divider(height: 5,),
+              child:  new Divider(height: 5, color: Colors.amber,),
             ),
              new Container(
               padding: const EdgeInsets.only(top: 40),
-              child: new Text('平均单位价格趋势(元/m²)'),
+              child: new Text('平均单位价格走势(元/m²)'),
             ),
+
             isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'avgPricePer'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'avgPricePer'),//房源单位平均价格变化
+            new Container(
+                padding: const EdgeInsets.only(top: 10),
+                child:  new Text('待售平均价格：'+ statData.sellingWeekPricePer.toString() + '元/m²      已售平均价格：'+ statData.soldWeekPricePer.toString() + '元/m²')
+            ),
             new Container(
               padding: const EdgeInsets.only(top: 20),
               child:  new Divider(height: 5,),
             ),
+
             new Container(
               padding: const EdgeInsets.only(top: 40),
-              child: new Text('房源周新增数量趋势'),
+              child: new Text('房源新增数量走势'),
             ),
             isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'increasedAmount'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'increasedAmount'), //房源新增数据变化
+            new Container(
+                padding: const EdgeInsets.only(top: 10),
+                child:  new Text('本周新增待售房源：'+ statData.sellingWeekIncrease.toString() + '套      已售房源：'+ statData.soldWeekIncrease.toString() + '套')
+            ),
+            new Container(
+              padding: const EdgeInsets.only(top: 20),
+              child:  new Divider(height: 5,),
+            ),
 
           ],
         ),
