@@ -38,7 +38,7 @@ class WeekStatView extends StatelessWidget {
       DateTime dateTime = DateTime.now();
       while(i < 12){
         ticks.add(TickSpec(dateTime));
-        dateTime = dateTime.add(Duration(days: -31));
+        dateTime = dateTime.add(Duration(days: -14));
         i+=2;
       }
     }
