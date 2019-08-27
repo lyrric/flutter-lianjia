@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('成都链家可视化'),
         actions: <Widget>[
           new RaisedButton(
-              child: new Text(isWeek?'>>切换为月统计':'切换为周统计'),
+              child: new Text(isWeek?'》切换为月统计':'》切换为周统计'),
               color: Colors.blue,
               textColor: Colors.white,
               highlightElevation: 10.0,//高亮时候的阴影
@@ -140,13 +140,21 @@ class _MyHomePageState extends State<MyHomePage> {
               child: new Text('房源数量趋势'),
             ),
             isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'amount'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'amount'), //房源数量变化
-             new Container(
+            new Container(
               padding: const EdgeInsets.only(top: 20),
+              child:  new Divider(height: 5,),
+            ),
+             new Container(
+              padding: const EdgeInsets.only(top: 40),
               child: new Text('平均单位价格趋势(元/m²)'),
             ),
             isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'amount'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'avgPricePer'),//房源单位平均价格变化
             new Container(
               padding: const EdgeInsets.only(top: 20),
+              child:  new Divider(height: 5,),
+            ),
+            new Container(
+              padding: const EdgeInsets.only(top: 40),
               child: new Text('房源周新增数量趋势'),
             ),
             isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'amount'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'increasedAmount'), //房源新增数据变化

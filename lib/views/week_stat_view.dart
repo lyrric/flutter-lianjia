@@ -18,8 +18,31 @@ class WeekStatView extends StatelessWidget {
 
   var weekStat;
 
+  ///横坐标
+  List<TickSpec<DateTime>> ticks;
 
-  WeekStatView(this.sellingWeekStat, this.soldWeekStat, this.field);
+  WeekStatView(this.sellingWeekStat, this.soldWeekStat, this.field){
+    ticks = new List();
+    int i = 0;
+    if(sellingWeekStat.length != 0){
+      while(i < sellingWeekStat.length){
+        ticks.add(TickSpec(sellingWeekStat[i].statDate));
+        i+=2;
+      }
+    }else if(soldWeekStat.length != 0){
+      while(i < soldWeekStat.length){
+        ticks.add(TickSpec(soldWeekStat[i].statDate));
+        i+=2;
+      }
+    }else{
+      DateTime dateTime = DateTime.now();
+      while(i < 12){
+        ticks.add(TickSpec(dateTime));
+        dateTime = dateTime.add(Duration(days: -31));
+        i+=2;
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +68,7 @@ class WeekStatView extends StatelessWidget {
       child: new charts.TimeSeriesChart(weekStat,
           animate: true,
           domainAxis: new charts.DateTimeAxisSpec(
+              tickProviderSpec: StaticDateTimeTickProviderSpec(ticks),
               tickFormatterSpec:  new charts.AutoDateTimeTickFormatterSpec(
                 day: new charts.TimeFormatterSpec( format: 'MM-dd', transitionFormat: 'MM-dd'),
               )
