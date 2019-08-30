@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lianjia/service/selling_house_service.dart';
-import 'package:lianjia/service/sold_house_service.dart';
-import 'package:lianjia/service/version_service.dart';
-import 'package:lianjia/views/month_stat_view.dart';
-import 'package:lianjia/views/week_stat_view.dart';
 
-import 'model/selling_house.dart';
-import 'model/sold_house.dart';
-import 'model/stat_data.dart';
 import 'service/common_service.dart';
+import 'views/county_body.dart';
 
 void main(){
   // 强制横屏
@@ -43,61 +36,26 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+
+  ///是否是周统计
+  bool _isWeek = true;
+  ///统计的区县
+  String _county = '成都市';
+
+  CommonService _commonService = new CommonService();
+
+  //数据更新时间
+  String updateDate = '- -';
+
   _MyHomePageState(){
     init();
   }
-  bool isWeek = true;
-
-  ///挂牌中房源周
-  List<SellingWeekStat> sellingWeekStatData = new List();
-  ///已售房源周
-  List<SoldWeekStat> soldWeekStatData =  new List();
-
-  List<SellingMonthStat> sellingMonthStatData = new List();
-  List<SoldMonthStat> soldMonthStatData = new List();
-
-  ///统计数据
-  StatData statData = new StatData();
-
-  var versionService = VersionService();
-  var soldHouseService = SoldHouseService();
-  var sellingHouseService = SellingHouseService();
-  var commonService = CommonService();
-
-  String updateDate = '- -';
-
-
 
   void init(){
-    versionService.getUpdateTime().then((data)=>
+    _commonService.getUpdateTime().then((data)=>
       super.setState((){
           updateDate = data;
       })
-    );
-    sellingHouseService.getSellingWeekStat().then((data)=>
-      super.setState((){
-        sellingWeekStatData = data;
-      })
-    );
-    sellingHouseService.getSellingMonthStat().then((data)=>
-      super.setState((){
-        sellingMonthStatData = data;
-      })
-    );
-    soldHouseService.getSoldWeekStat().then((data)=>
-      super.setState((){
-        soldWeekStatData = data;
-      })
-    );
-    soldHouseService.getSoldMonthStat().then((data)=>
-      super.setState((){
-        soldMonthStatData = data;
-      })
-    );
-    commonService.getStatData().then((data)=>
-        super.setState((){
-          statData = data;
-        })
     );
   }
 
@@ -108,16 +66,27 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('成都链家可视化'),
         actions: <Widget>[
           new RaisedButton(
-              child: new Text(isWeek?'》切换为月统计':'》切换为周统计'),
+              child: new Text(_county + '∨'),
               color: Colors.blue,
               textColor: Colors.white,
               highlightElevation: 10.0,//高亮时候的阴影
               disabledElevation: 10.0,//按下的时候的阴影
               onPressed: (){
-                setState(() {
-                  isWeek = !isWeek;
-                });
+
             },
+          ),
+          new PopupMenuButton(
+              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                _selectView(Icons.keyboard_arrow_right, _isWeek?'切换为月统计':'切换为周统计', 'switch_stat_date'),
+              ],onSelected: (String action){
+                switch(action){
+                  case 'switch_stat_date':
+                    super.setState(() {
+                      _isWeek = !_isWeek;
+                    });
+                  break;
+                }
+          },
           )
         ],
       ),
@@ -144,143 +113,25 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            houseAmountRow(),
-            housePriceRow(),
-            houseIncreaseRow(),
+           new CountyBody(_isWeek, _county)
           ],
         ),
         )
     );
   }
-  //房源数量走势
-  Column houseAmountRow(){
-    return new Column(
-        children: <Widget>[
-          new Container(
-            padding: const EdgeInsets.only(top: 20),
-            child: new Text('房源数量走势', style: TextStyle(color: Colors.indigo )),
-          ),
-          isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'amount'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'amount'), //房源数量变化
-          new Container(
-              padding: const EdgeInsets.only(top: 10),
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Text('待售房源：'),
-                  new Text(statData.sellingAmount.toString(), style: TextStyle(color: Colors.deepOrange ),),
-                  new Text('套      已售房源：'),
-                  new Text(statData.soldAmount.toString(),  style: TextStyle(color: Colors.deepOrange )),
-                  new Text('套')
-                ],
-              ),
 
-          ),
-          new Container(
-            padding: const EdgeInsets.only(top: 20),
-            child:  new Divider(height: 5, color: Colors.amber,),
-          ),
-        ]
+  // 返回每个隐藏的菜单项
+  _selectView(IconData icon, String text, String id) {
+    return new PopupMenuItem<String>(
+        value: id,
+        child: new Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            new Icon(icon, color: Colors.blue),
+            new Text(text),
+          ],
+        )
     );
   }
-  //房源单位价格走势
-  Column housePriceRow(){
-    return new Column(
-      children: <Widget>[
-
-        new Container(
-          padding: const EdgeInsets.only(top: 40),
-          child: new Text('平均单位价格走势(元/m²)', style: TextStyle(color: Colors.indigo )),
-        ),
-        isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'avgPricePer'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'avgPricePer'),//房源单位平均价格变化
-        isWeek?Text(''):new Container(
-            padding: const EdgeInsets.only(top: 10),
-            child:  new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text('上月待售均价：'),
-                new Text(statData.sellingLastMonthPricePer.toString(), style: TextStyle(color: Colors.deepOrange ),),
-                new Text('元/m²     上月已售均价：'),
-                new Text(statData.soldLastMonthPricePer.toString(),  style: TextStyle(color: Colors.deepOrange )),
-                new Text('元/m²')
-              ],
-            ),
-        ),
-        new Container(
-            padding: const EdgeInsets.only(top: 10),
-            child:  new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text('待售均价：'),
-                new Text(statData.sellingAvgPricePer.toString(), style: TextStyle(color: Colors.deepOrange ),),
-                new Text('元/m²     已售均价：'),
-                new Text(statData.soldAvgPricePer.toString(),  style: TextStyle(color: Colors.deepOrange )),
-                new Text('元/m²')
-              ],
-            ),
-        ),
-        new Container(
-          padding: const EdgeInsets.only(top: 20),
-          child:  new Divider(height: 5, color: Colors.amber,),
-        ),
-      ],
-    );
-  }
-
-  //房源新增数量走势
-  Column houseIncreaseRow(){
-    return  new Column(
-      children: <Widget>[
-        new Container(
-          padding: const EdgeInsets.only(top: 40),
-          child: new Text('房源新增数量走势', style: TextStyle(color: Colors.indigo )),
-        ),
-        isWeek?new WeekStatView(sellingWeekStatData, soldWeekStatData, 'increasedAmount'):new MonthStatView(sellingMonthStatData, soldMonthStatData, 'increasedAmount'), //房源新增数据变化
-
-        isWeek?Text(''): new Container(
-            padding: const EdgeInsets.only(top: 10),
-            child:  new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text('上月新增待售：'),
-                new Text(statData.sellingLastMonthIncrease.toString(), style: TextStyle(color: Colors.deepOrange ),),
-                new Text('套     已售：'),
-                new Text(statData.soldLastMonthIncrease.toString(),  style: TextStyle(color: Colors.deepOrange )),
-                new Text('套')
-              ],
-            ),
-        ),
-        isWeek?new Container(
-            padding: const EdgeInsets.only(top: 10),
-            child:  new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text('每周平均新增待售：'),
-                new Text(statData.sellingAvgWeekIncrease.toString(), style: TextStyle(color: Colors.deepOrange ),),
-                new Text('套     已售：'),
-                new Text(statData.soldAvgWeekIncrease.toString(),  style: TextStyle(color: Colors.deepOrange )),
-                new Text('套')
-              ],
-            ),
-        ):new Container(
-            padding: const EdgeInsets.only(top: 10),
-            child:  new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Text('每月平均新增待售：'),
-                new Text(statData.sellingAvgMonthIncrease.toString(), style: TextStyle(color: Colors.deepOrange ),),
-                new Text('套     已售：'),
-                new Text(statData.soldAvgMonthIncrease.toString(),  style: TextStyle(color: Colors.deepOrange )),
-                new Text('套')
-              ],
-            ),
-        ),
-        new Container(
-          padding: const EdgeInsets.only(top: 20),
-          child:  new Divider(height: 5, color: Colors.amber,),
-        ),
-      ],
-    );
-  }
-
 }
 

@@ -1,17 +1,16 @@
 import 'package:charts_common/common.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/cupertino.dart';
-import 'package:lianjia/model/selling_house.dart';
-import 'package:lianjia/model/sold_house.dart';
+import 'package:lianjia/model/house_stat.dart';
 
 ///周统计
-class WeekStatView extends StatelessWidget {
+class WeekLineChart extends StatelessWidget {
 
   ///挂牌中房源周
-  List<SellingWeekStat> sellingWeekStat;
+  List<HouseStat> sellingWeekStat;
 
   ///已售房源周
-  List<SoldWeekStat> soldWeekStat;
+  List<HouseStat> soldWeekStat;
 
   ///纵坐标字段名
   String field;
@@ -21,7 +20,7 @@ class WeekStatView extends StatelessWidget {
   ///横坐标
   List<TickSpec<DateTime>> ticks;
 
-  WeekStatView(this.sellingWeekStat, this.soldWeekStat, this.field){
+  WeekLineChart(this.sellingWeekStat, this.soldWeekStat, this.field){
     ticks = new List();
     int i = 0;
     if(sellingWeekStat.length != 0){
@@ -48,18 +47,18 @@ class WeekStatView extends StatelessWidget {
   Widget build(BuildContext context) {
     weekStat =
     [
-      new charts.Series<SellingWeekStat, DateTime>(
+      new charts.Series<HouseStat, DateTime>(
         id:  'sellingWeekStat_' + field,
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (SellingWeekStat row, _) => row.statDate,
-        measureFn: (SellingWeekStat row, _) => row.toJson()[field],
+        domainFn: (HouseStat row, _) => row.statDate,
+        measureFn: (HouseStat row, _) => row.toJson()[field],
         data: sellingWeekStat,
       ),
-      new charts.Series<SoldWeekStat, DateTime>(
+      new charts.Series<HouseStat, DateTime>(
         id: 'soldWeekStat_' + field,
         colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-        domainFn: (SoldWeekStat row, _) => row.statDate,
-        measureFn: (SoldWeekStat row, _) => row.toJson()[field],
+        domainFn: (HouseStat row, _) => row.statDate,
+        measureFn: (HouseStat row, _) => row.toJson()[field],
         data: soldWeekStat,
       )
     ];
