@@ -6,32 +6,24 @@ import 'package:lianjia/views/month_stat_chart.dart';
 import 'package:lianjia/views/week_stat_chart.dart';
 import '../model/stat_data.dart';
 import '../service/common_service.dart';
+import '../data/system_data.dart';
 
 ///区县body
 class CountyBody extends StatefulWidget{
 
-  bool _isWeek;
-  String _county;
-
-  CountyBody(this._isWeek, this._county);
-
   @override
   State createState() {
-    return CountyBodyStat(_isWeek,_county);
+    return CountyBodyStat();
   }
 }
 
 class CountyBodyStat extends State<CountyBody>{
-  bool _isWeek;
-
-  String _county;
 
   WeekStatService _weekStatService = WeekStatService();
 
   MonthStatService _monthStatService = MonthStatService();
 
   CommonService _commonService = CommonService();
-
 
   List<HouseStat> _soldMonthLineChartData = new List();
   List<HouseStat> _sellingMonthLineChartData = new List();
@@ -41,35 +33,35 @@ class CountyBodyStat extends State<CountyBody>{
   StatData _statData = new StatData();
 
   init() {
-    _weekStatService.getSellingStat(_county).then((data)=>
+    _weekStatService.getSellingStat().then((data)=>
         super.setState((){
           _sellingWeekLineChartData = data;
         }));
-    _weekStatService.getSoldStat(_county).then((data)=>
+    _weekStatService.getSoldStat().then((data)=>
         super.setState((){
           _soldWeekLineChartData = data;
         }));
-    _commonService.getStatData(_county).then((data)=>
+    _commonService.getStatData().then((data)=>
         super.setState((){
           _statData = data;
         }));
-    _monthStatService.getSellingStat(_county).then((data)=>
+    _monthStatService.getSellingStat().then((data)=>
         super.setState((){
           _sellingMonthLineChartData = data;
         }));
-    _monthStatService.getSoldStat(_county).then((data)=>
+    _monthStatService.getSoldStat().then((data)=>
         super.setState((){
           _soldMonthLineChartData = data;
         }));
   }
 
-  CountyBodyStat(this._isWeek, this._county){
+  CountyBodyStat(){
     init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _isWeek?CountyWeekWidget(_sellingWeekLineChartData, _soldWeekLineChartData, _statData)
+    return SystemData.isWeek?CountyWeekWidget(_sellingWeekLineChartData, _soldWeekLineChartData, _statData)
         :CountyMonthWidget(_sellingMonthLineChartData, _soldMonthLineChartData, _statData);
   }
 }

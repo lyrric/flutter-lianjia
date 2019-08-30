@@ -4,13 +4,15 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:lianjia/model/stat_data.dart';
 
+
+import '../data/system_data.dart';
 import 'base_service.dart';
 
 class CommonService extends BaseService{
 
   ///数据统计
-  Future<StatData> getStatData(String county) async{
-    Response response = await dio.get("/remote/statData", queryParameters: {'county': county});
+  Future<StatData> getStatData() async{
+    Response response = await dio.get("/remote/statData", queryParameters: {'county': SystemData.county});
     Map<String, dynamic> httpResult = response.data;
     if(checkSuccess(httpResult)){
       return StatData.fromJson(httpResult['data']);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lianjia/data/system_data.dart';
 
 import 'service/common_service.dart';
 import 'views/county_body.dart';
@@ -82,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 switch(action){
                   case 'switch_stat_date':
                     super.setState(() {
-                      _isWeek = !_isWeek;
+                      SystemData.isWeek = !SystemData.isWeek;
                     });
                   break;
                 }
@@ -113,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-           new CountyBody(_isWeek, _county)
+           new CountyBody()
           ],
         ),
         )
