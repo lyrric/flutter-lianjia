@@ -12,7 +12,7 @@ class CommonService extends BaseService{
 
   ///数据统计
   Future<StatData> getStatData() async{
-    Response response = await dio.get("/remote/statData", queryParameters: {'county': SystemData.county});
+    Response response = await dio.get("/remote/statData", queryParameters: {'area': SystemData.county});
     Map<String, dynamic> httpResult = response.data;
     if(checkSuccess(httpResult)){
       return StatData.fromJson(httpResult['data']);
@@ -28,5 +28,13 @@ class CommonService extends BaseService{
       return date;
     }
     return '--';
+  }
+
+  Future<List<String>> getAreas() async{
+    Response response = await dio.get('/remote/area');
+    Map<String, dynamic> httpResultMap = json.decode(response.data);
+    if(checkSuccess(httpResultMap)){
+      return httpResultMap['data'];
+    }
   }
 }

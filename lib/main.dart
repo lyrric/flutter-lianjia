@@ -1,5 +1,10 @@
+import 'dart:developer' as prefix0;
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lianjia/data/system_data.dart';
+import 'package:lianjia/data/system_data.dart' as prefix1;
+import 'package:lianjia/views/area_select_view.dart';
 
 import 'service/common_service.dart';
 import 'views/county_body.dart';
@@ -23,6 +28,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(),
+      routes:{
+        '/select_area':(BuildContext context)=>new AreaSelectView()
+      },
     );
   }
 }
@@ -37,11 +45,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-
-  ///是否是周统计
-  bool _isWeek = true;
-  ///统计的区县
-  String _county = '成都市';
 
   CommonService _commonService = new CommonService();
 
@@ -67,18 +70,27 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('成都链家可视化'),
         actions: <Widget>[
           new RaisedButton(
-              child: new Text(_county + '∨'),
+              child: new Text(SystemData.county + '∨'),
               color: Colors.blue,
               textColor: Colors.white,
               highlightElevation: 10.0,//高亮时候的阴影
               disabledElevation: 10.0,//按下的时候的阴影
               onPressed: (){
-
+                Navigator.of(context).pushNamed('/select_area')
+                    .then(
+                        (data)=> super.setState((){
+                          if(data != null){
+                            SystemData.lastCounty = SystemData.county;
+                            SystemData.county = data;
+                            SystemData.reload = true;
+                          }
+                        })
+                );
             },
           ),
           new PopupMenuButton(
               itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
-                _selectView(Icons.keyboard_arrow_right, _isWeek?'切换为月统计':'切换为周统计', 'switch_stat_date'),
+                _selectView(Icons.keyboard_arrow_right, SystemData.isWeek?'切换为月统计':'切换为周统计', 'switch_stat_date'),
               ],onSelected: (String action){
                 switch(action){
                   case 'switch_stat_date':

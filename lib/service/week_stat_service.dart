@@ -9,7 +9,7 @@ class WeekStatService extends BaseService{
 
   ///周统计
   Future<List<HouseStat>> getSellingStat()async{
-    Response response = await dio.get('/remote/sellingWeekStat', queryParameters: {'county': SystemData.county});
+    Response response = await dio.get('/remote/sellingWeekStat', queryParameters: {'area': SystemData.county});
     Map<String, dynamic> httpResultMap = response.data;
     if(checkSuccess(httpResultMap)){
       List<HouseStat> data = new List();
@@ -25,7 +25,7 @@ class WeekStatService extends BaseService{
 
   ///周统计
   Future<List<HouseStat>> getSoldStat()async{
-    Response response = await dio.get('/remote/soldWeekStat', queryParameters: {'county': SystemData.county});
+    Response response = await dio.get('/remote/soldWeekStat', queryParameters: {'area': SystemData.county});
     Map<String, dynamic> httpResultMap = response.data;
     if(checkSuccess(httpResultMap)){
       List<HouseStat> data = new List();

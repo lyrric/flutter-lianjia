@@ -10,7 +10,7 @@ class MonthStatService extends BaseService{
 
   ///月统计
   Future<List<HouseStat>> getSoldStat()async{
-    Response response = await dio.get('/remote/soldMonthStat', queryParameters: {'county': SystemData.county});
+    Response response = await dio.get('/remote/soldMonthStat', queryParameters: {'area': SystemData.county});
     Map<String, dynamic> httpResultMap = response.data;
     if(checkSuccess(httpResultMap)){
       List<HouseStat> data = new List();
@@ -25,7 +25,7 @@ class MonthStatService extends BaseService{
   }
   ///月统计
   Future<List<HouseStat>> getSellingStat()async{
-    Response response = await dio.get('/remote/sellingMonthStat', queryParameters: {'county': SystemData.county});
+    Response response = await dio.get('/remote/sellingMonthStat', queryParameters: {'area': SystemData.county});
     Map<String, dynamic> httpResultMap = response.data;
     if(checkSuccess(httpResultMap)){
       List<HouseStat> data = new List();

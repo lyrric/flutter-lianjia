@@ -61,6 +61,10 @@ class CountyBodyStat extends State<CountyBody>{
 
   @override
   Widget build(BuildContext context) {
+    if(SystemData.reload){
+      init();
+      SystemData.reload = false;
+    }
     return SystemData.isWeek?CountyWeekWidget(_sellingWeekLineChartData, _soldWeekLineChartData, _statData)
         :CountyMonthWidget(_sellingMonthLineChartData, _soldMonthLineChartData, _statData);
   }
