@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:lianjia/data/system_data.dart';
 import 'package:lianjia/data/system_data.dart' as prefix1;
 import 'package:lianjia/views/area_select_view.dart';
+import 'package:lianjia/views/city_body.dart';
 
 import 'service/common_service.dart';
 import 'views/county_body.dart';
@@ -126,7 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-           new CountyBody()
+            new CountyBody(),
+            SystemData.county =='成都市'?new CityBody():Text('')
           ],
         ),
         )
