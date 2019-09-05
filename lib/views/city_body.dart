@@ -51,7 +51,7 @@ class CityBodyStat extends State<CityBody>{
         ),
         new Container(
           height: 250,
-          child: new charts.PieChart(initChartData(_sellingAreasStat, 'selling', charts.MaterialPalette.blue.shadeDefault),
+          child: new charts.PieChart(initChartData(_sellingAreasStat, 'selling', true),
               animate: true,
               defaultRenderer:  new charts.ArcRendererConfig(
                   arcWidth: 60,
@@ -59,11 +59,15 @@ class CityBodyStat extends State<CityBody>{
         ),
         new Container(
           padding: const EdgeInsets.only(top: 20),
+          child: new Divider(height: 5, color: Colors.amber,),
+        ),
+        new Container(
+          padding: const EdgeInsets.only(top: 20),
           child: new Text('各区域已售房源数量', style: TextStyle(color: Colors.indigo)),
         ),
         new Container(
             height: 250,
-            child: new charts.PieChart(initChartData(_soldAreasStat, 'sold', charts.MaterialPalette.green.shadeDefault),
+            child: new charts.PieChart(initChartData(_soldAreasStat, 'sold', false),
                 animate: true,
                 defaultRenderer: new charts.ArcRendererConfig(
                     arcWidth: 60,
@@ -73,11 +77,11 @@ class CityBodyStat extends State<CityBody>{
     );
   }
 
-  initChartData(var data, String id, var color){
+  initChartData(var data, String id, bool isBlue){
     return [
       new charts.Series<SimpleKeyValue, String>(
         id: id,
-        colorFn: (_, __) => color,
+        colorFn: isBlue?getBlueColor:getGreenColor,
         domainFn: (SimpleKeyValue row, _) => row.key,
         measureFn: (SimpleKeyValue row, _) => row.value,
         data: data,
@@ -86,4 +90,19 @@ class CityBodyStat extends State<CityBody>{
     ];
   }
 
+   charts.Color getBlueColor(var data,var index){
+     double t =255/18;
+     t = t*index;
+     int rgb = 255 - t.toInt();
+     print('rgb='+rgb.toString());
+     return charts.Color(r:0, g:0, b:255, a:rgb);
+  }
+
+  charts.Color getGreenColor(var data,int index){
+    double t =255/18;
+    t = t*index;
+    int rgb = 255 - t.toInt();
+    print('rgb='+rgb.toString());
+    return charts.Color(r:0, g:255, b:0, a:rgb);
+  }
 }
