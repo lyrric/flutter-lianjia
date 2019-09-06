@@ -28,11 +28,27 @@ class HouseStatService extends BaseService{
     return new List();
   }
 
+  ///区域房源数量统计
   Future<List<SimpleKeyValue>> getAreasStat(int dataType)async{
     Response response = await dio.get('/remote/getAreasStat',
         queryParameters: {
           'dataType': dataType,
         });
+    Map<String, dynamic> httpResultMap = response.data;
+    if(checkSuccess(httpResultMap)){
+      List<SimpleKeyValue> data = new List();
+      var listMap = httpResultMap['data'];
+      for(var map in listMap){
+        SimpleKeyValue simpleKeyValue = SimpleKeyValue.fromJson(map);
+        data.add(simpleKeyValue);
+      }
+      return data;
+    }
+    return new List();
+  }
+
+  Future<List<SimpleKeyValue>> getAreasAvgPricePer()async{
+    Response response = await dio.get('/remote/getAreaAvgPricePer');
     Map<String, dynamic> httpResultMap = response.data;
     if(checkSuccess(httpResultMap)){
       List<SimpleKeyValue> data = new List();
