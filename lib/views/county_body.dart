@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lianjia/constant/sys_constant.dart';
 import 'package:lianjia/model/house_stat.dart';
 import 'package:lianjia/service/house_stat_service.dart';
-import 'package:lianjia/views/month_stat_chart.dart';
 import 'package:lianjia/views/week_stat_chart.dart';
 import '../model/stat_data.dart';
 import '../service/common_service.dart';
@@ -146,7 +145,7 @@ class CountyWidget extends StatelessWidget {
         new WeekLineChart( _sellingLineChartData, _soldLineChartData, 'increasedAmount'),
         //房源新增数据变化
         SystemData.isWeek?Text(''):descWidget('上月新增待售：', '套     已售：', '套', _statData.sellingLastMonthIncrease,_statData.soldLastMonthIncrease),
-        descWidget('每周平均新增待售：', '套     已售：', '套', _statData.sellingAvgWeekIncrease, _statData.soldAvgWeekIncrease),
+        descWidget(SystemData.isWeek?'每周平均新增待售：':'每月平均新增待售：', '套     已售：', '套', _statData.sellingAvgWeekIncrease, _statData.soldAvgWeekIncrease),
         new Container(
           padding: const EdgeInsets.only(top: 20),
           child: new Divider(height: 5, color: Colors.amber,),
@@ -164,13 +163,13 @@ Widget descWidget(String text1, String text2, String text3, var val1, var val2){
     child: new Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        new Text(text1),
+        new Text(text1, style: TextStyle(color: Colors.black)),
         new Text(val1.toString(),
           style: TextStyle(color: Colors.deepOrange),),
-        new Text(text2),
+        new Text(text2, style: TextStyle(color: Colors.black)),
         new Text(val2.toString(),
             style: TextStyle(color: Colors.deepOrange)),
-        new Text(text3)
+        new Text(text3, style: TextStyle(color: Colors.black))
       ],
     ),
   );

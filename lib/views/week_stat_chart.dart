@@ -25,18 +25,18 @@ class WeekLineChart extends StatelessWidget {
     int i = 0;
     if(sellingWeekStat.length != 0){
       while(i < sellingWeekStat.length){
-        ticks.add(TickSpec(sellingWeekStat[i].statDate));
+        ticks.add(TickSpec(sellingWeekStat[i].statDate, style:  charts.TextStyleSpec(color: charts.Color.black)));
         i+=2;
       }
     }else if(soldWeekStat.length != 0){
       while(i < soldWeekStat.length){
-        ticks.add(TickSpec(soldWeekStat[i].statDate));
+        ticks.add(TickSpec(soldWeekStat[i].statDate, style:  charts.TextStyleSpec(color: charts.Color.black)));
         i+=2;
       }
     }else{
       DateTime dateTime = DateTime.now();
       while(i < 12){
-        ticks.add(TickSpec(dateTime));
+        ticks.add(TickSpec(dateTime, style:  charts.TextStyleSpec(color: charts.Color.black)));
         dateTime = dateTime.add(Duration(days: -14));
         i+=2;
       }

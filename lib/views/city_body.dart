@@ -60,8 +60,8 @@ class CityBodyStat extends State<CityBody>{
           SimpleKeyValue item = data[i];
           Row row = Row(
             children: <Widget>[
-              Text(item.key + '：'),
-              Text(item.value.toString(), style: TextStyle(color: Colors.brown),),
+              Text(item.key + '：',style: TextStyle(color: Colors.cyan)),
+              Text(item.value.toString(), style: TextStyle(color: Colors.deepOrange),),
             ],
           );
           rowList.add(row);
