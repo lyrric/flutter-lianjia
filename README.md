@@ -8,7 +8,4 @@ python-lianjia: 爬取成都链家的二手房信息 ->https://github.com/lyrric
 kotlin-lianjia: 安卓后台接口 ->https://github.com/lyrric/kotlin-lianjia
 
 ## 界面
-<img src="https://github.com/lyrric/flutter-lianjia/blob/master/images/Screenshot_20190909_174206_com.github.lyrric.lian.jpg"  width="250" height="500">
-<img src="https://github.com/lyrric/flutter-lianjia/blob/master/images/Screenshot_20190909_174214_com.github.lyrric.lian.jpg"  width="250" height="500">
-<img src="https://github.com/lyrric/flutter-lianjia/blob/master/images/Screenshot_20190909_174222_com.github.lyrric.lian.jpg"  width="250" height="500">
-<img src="https://github.com/lyrric/flutter-lianjia/blob/master/images/Screenshot_20190909_174225_com.github.lyrric.lian.jpg"  width="250" height="500">
+<img src="https://github.com/lyrric/flutter-lianjia/blob/master/images/Screenshot_20190909_182212_com.github.lyrric.lian.jpg"  width="500" >
